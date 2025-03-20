@@ -2,22 +2,159 @@
   "name": "gonexus",
   "displayName": "GoNexus",
   "description": "Your Go coding companion for best practices",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
-    "vscode": "^1.98.0"
+    "vscode": "^1.80.0"
   },
+  "publisher": "PramithaMJ",
   "categories": [
-    "Other"
+    "Linters",
+    "Programming Languages",
+    "Formatters"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "go",
+    "golang",
+    "linter",
+    "best practices",
+    "code quality"
+  ],
+  "activationEvents": [
+    "onLanguage:go"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "gonexus.helloWorld",
-        "title": "Hello World"
+        "command": "gonexus.fixAll",
+        "title": "Go Best Practices: Fix All Issues"
+      },
+      {
+        "command": "gonexus.disableRule",
+        "title": "Go Best Practices: Disable Rule"
+      },
+      {
+        "command": "gonexus.refreshIssues",
+        "title": "Refresh Issues",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "gonexus.fixIssue",
+        "title": "Fix Issue",
+        "icon": "$(lightbulb)"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Go Best Practices",
+      "properties": {
+        "goBestPractices.naming.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable naming convention rules"
+        },
+        "goBestPractices.naming.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "default": "warning",
+          "description": "Set severity level for naming convention issues"
+        },
+        "goBestPractices.naming.packageNameRegex": {
+          "type": "string",
+          "default": "^[a-z][a-z0-9]*$",
+          "description": "Regular expression for validating package names"
+        },
+        "goBestPractices.naming.functionNameRegex": {
+          "type": "string",
+          "default": "^[a-zA-Z][a-zA-Z0-9]*$",
+          "description": "Regular expression for validating function names"
+        },
+        "goBestPractices.naming.variableNameRegex": {
+          "type": "string",
+          "default": "^[a-zA-Z][a-zA-Z0-9]*$",
+          "description": "Regular expression for validating variable names"
+        },
+        "goBestPractices.error.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable error handling rules"
+        },
+        "goBestPractices.error.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "default": "warning",
+          "description": "Set severity level for error handling issues"
+        },
+        "goBestPractices.formatting.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable formatting rules"
+        },
+        "goBestPractices.formatting.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "default": "info",
+          "description": "Set severity level for formatting issues"
+        },
+        "goBestPractices.formatting.maxLineLength": {
+          "type": "number",
+          "default": 100,
+          "description": "Maximum line length before warning"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "gonexus",
+          "title": "GoNexus",
+          "icon": "resources/gonexus.svg"
+        }
+      ]
+    },
+    "views": {
+      "gonexus": [
+        {
+          "id": "bestPractices",
+          "name": "Best Practices",
+          "icon": "resources/best-practices.svg",
+          "contextualTitle": "Go Best Practices"
+        },
+        {
+          "id": "issues",
+          "name": "Issues",
+          "icon": "resources/issues.svg",
+          "contextualTitle": "Go Issues"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "gonexus.refreshIssues",
+          "when": "view == gonexusBestPractices || view == gonexusIssues",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "gonexus.fixIssue",
+          "when": "view == gonexusBestPractices || view == gonexusIssues",
+          "group": "inline"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -25,17 +162,35 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "webpack": "webpack --config webpack.config.js",
+    "webpack-dev": "webpack --mode development --config webpack.config.js",
+    "webpack-watch": "webpack --mode development --watch --config webpack.config.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.98.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.98.0",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
-    "eslint": "^9.21.0",
-    "typescript": "^5.7.3",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
-  }
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.21.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.7.3",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "vscode": "^1.1.37"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PramithaMJ/gonexus"
+  },
+  "bugs": {
+    "url": "https://github.com/PramithaMJ/gonexus/issues"
+  },
+  "homepage": "https://github.com/PramithaMJ/gonexus#readme",
+  "license": "MIT"
 }
