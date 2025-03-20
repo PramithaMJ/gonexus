@@ -117,25 +117,25 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "gonexus-issues",
-          "title": "GoNexus Issues",
-          "icon": "resources/issues-icon.svg"
+          "id": "gonexus",
+          "title": "GoNexus",
+          "icon": "resources/gonexus.svg"
         }
       ]
     },
     "views": {
-      "gonexus-issues": [
+      "gonexus": [
         {
-          "id": "gonexusBestPractices",
+          "id": "bestPractices",
           "name": "Best Practices",
-          "icon": "resources/best-practice.svg",
-          "contextualTitle": "GoNexus Best Practices"
+          "icon": "resources/best-practices.svg",
+          "contextualTitle": "Go Best Practices"
         },
         {
-          "id": "gonexusIssues",
+          "id": "issues",
           "name": "Issues",
-          "icon": "resources/issue.svg",
-          "contextualTitle": "GoNexus Issues"
+          "icon": "resources/issues.svg",
+          "contextualTitle": "Go Issues"
         }
       ]
     },

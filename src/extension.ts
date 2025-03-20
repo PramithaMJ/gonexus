@@ -62,14 +62,14 @@ export function activate(context: vscode.ExtensionContext) {
   const issuesProvider = new IssuesProvider('issue');
   
   // Register tree views
-  vscode.window.createTreeView('gonexusBestPractices', {
-      treeDataProvider: bestPracticesProvider,
-      showCollapseAll: true
+  const bestPracticesView = vscode.window.createTreeView('bestPractices', { 
+    treeDataProvider: bestPracticesProvider,
+    showCollapseAll: true
   });
   
-  vscode.window.createTreeView('gonexusIssues', {
-      treeDataProvider: issuesProvider,
-      showCollapseAll: true
+  const issuesView = vscode.window.createTreeView('issues', { 
+    treeDataProvider: issuesProvider,
+    showCollapseAll: true
   });
 
   // Register commands
@@ -81,23 +81,30 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }),
 
-    vscode.commands.registerCommand('gonexus.refreshIssues', () => {
-      bestPracticesProvider.analyzeCodebase();
-      issuesProvider.analyzeCodebase();
+    vscode.commands.registerCommand('gonexus.refreshBestPractices', () => {
+      bestPracticesProvider.refresh();
     }),
     
-    vscode.commands.registerCommand('gonexus.fixIssue', (item) => {
-      if (item.issue.category === 'bestPractice') {
-        bestPracticesProvider.fixIssue(item);
+    vscode.commands.registerCommand('gonexus.refreshIssues', () => {
+      issuesProvider.refresh();
+    }),
+    
+    vscode.commands.registerCommand('gonexus.fixIssue', (issueItem) => {
+      if (issueItem.issue.category === 'bestPractice') {
+        bestPracticesProvider.fixIssue(issueItem);
       } else {
-        issuesProvider.fixIssue(item);
+        issuesProvider.fixIssue(issueItem);
       }
-    })
+    }),
+    
+    // Register the tree views
+    bestPracticesView,
+    issuesView
   );
 
   // Initial analysis
-  bestPracticesProvider.analyzeCodebase();
-  issuesProvider.analyzeCodebase();
+  bestPracticesProvider.refresh();
+  issuesProvider.refresh();
 }
 
 export function deactivate() {
