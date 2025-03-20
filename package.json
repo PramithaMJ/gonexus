@@ -32,6 +32,16 @@
       {
         "command": "gonexus.disableRule",
         "title": "Go Best Practices: Disable Rule"
+      },
+      {
+        "command": "gonexus.refreshIssues",
+        "title": "Refresh Issues",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "gonexus.fixIssue",
+        "title": "Fix Issue",
+        "icon": "$(lightbulb)"
       }
     ],
     "configuration": {
@@ -103,6 +113,47 @@
           "description": "Maximum line length before warning"
         }
       }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "gonexus-issues",
+          "title": "GoNexus Issues",
+          "icon": "resources/issues-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "gonexus-issues": [
+        {
+          "id": "gonexusBestPractices",
+          "name": "Best Practices",
+          "icon": "resources/best-practice.svg",
+          "contextualTitle": "GoNexus Best Practices"
+        },
+        {
+          "id": "gonexusIssues",
+          "name": "Issues",
+          "icon": "resources/issue.svg",
+          "contextualTitle": "GoNexus Issues"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "gonexus.refreshIssues",
+          "when": "view == gonexusBestPractices || view == gonexusIssues",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "gonexus.fixIssue",
+          "when": "view == gonexusBestPractices || view == gonexusIssues",
+          "group": "inline"
+        }
+      ]
     }
   },
   "scripts": {
@@ -111,18 +162,24 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "webpack": "webpack --config webpack.config.js",
+    "webpack-dev": "webpack --mode development --config webpack.config.js",
+    "webpack-watch": "webpack --mode development --watch --config webpack.config.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.98.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.98.0",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
-  "@typescript-eslint/parser": "^8.25.0",
-    "eslint": "^9.21.0",
-    "typescript": "^5.7.3",
+    "@typescript-eslint/parser": "^8.25.0",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.21.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.7.3",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "vscode": "^1.1.37"

@@ -4,6 +4,7 @@ import { DiagnosticsProvider } from "./providers/diagnostics";
 import { QuickFixProvider } from "./providers/quickFix";
 import { CodeActionProvider } from "./providers/codeAction";
 import { loadConfiguration } from "./utils/config";
+import { IssuesProvider } from './issuesProvider';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("Go Best Practices extension is now active");
@@ -56,6 +57,21 @@ export function activate(context: vscode.ExtensionContext) {
     )
   );
 
+  // Register issues providers
+  const bestPracticesProvider = new IssuesProvider('bestPractice');
+  const issuesProvider = new IssuesProvider('issue');
+  
+  // Register tree views
+  vscode.window.createTreeView('gonexusBestPractices', {
+      treeDataProvider: bestPracticesProvider,
+      showCollapseAll: true
+  });
+  
+  vscode.window.createTreeView('gonexusIssues', {
+      treeDataProvider: issuesProvider,
+      showCollapseAll: true
+  });
+
   // Register commands
   context.subscriptions.push(
     vscode.commands.registerCommand("go-best-practices.fixAll", () => {
@@ -63,8 +79,25 @@ export function activate(context: vscode.ExtensionContext) {
       if (editor && editor.document.languageId === "go") {
         quickFixProvider.fixAllProblems(editor.document);
       }
+    }),
+
+    vscode.commands.registerCommand('gonexus.refreshIssues', () => {
+      bestPracticesProvider.analyzeCodebase();
+      issuesProvider.analyzeCodebase();
+    }),
+    
+    vscode.commands.registerCommand('gonexus.fixIssue', (item) => {
+      if (item.issue.category === 'bestPractice') {
+        bestPracticesProvider.fixIssue(item);
+      } else {
+        issuesProvider.fixIssue(item);
+      }
     })
   );
+
+  // Initial analysis
+  bestPracticesProvider.analyzeCodebase();
+  issuesProvider.analyzeCodebase();
 }
 
 export function deactivate() {
