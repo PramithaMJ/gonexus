@@ -2,22 +2,108 @@
   "name": "gonexus",
   "displayName": "GoNexus",
   "description": "Your Go coding companion for best practices",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
-    "vscode": "^1.98.0"
+    "vscode": "^1.80.0"
   },
+  "publisher": "PramithaMJ",
   "categories": [
-    "Other"
+    "Linters",
+    "Programming Languages",
+    "Formatters"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "go",
+    "golang",
+    "linter",
+    "best practices",
+    "code quality"
+  ],
+  "activationEvents": [
+    "onLanguage:go"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "gonexus.helloWorld",
-        "title": "Hello World"
+        "command": "gonexus.fixAll",
+        "title": "Go Best Practices: Fix All Issues"
+      },
+      {
+        "command": "gonexus.disableRule",
+        "title": "Go Best Practices: Disable Rule"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Go Best Practices",
+      "properties": {
+        "goBestPractices.naming.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable naming convention rules"
+        },
+        "goBestPractices.naming.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "default": "warning",
+          "description": "Set severity level for naming convention issues"
+        },
+        "goBestPractices.naming.packageNameRegex": {
+          "type": "string",
+          "default": "^[a-z][a-z0-9]*$",
+          "description": "Regular expression for validating package names"
+        },
+        "goBestPractices.naming.functionNameRegex": {
+          "type": "string",
+          "default": "^[a-zA-Z][a-zA-Z0-9]*$",
+          "description": "Regular expression for validating function names"
+        },
+        "goBestPractices.naming.variableNameRegex": {
+          "type": "string",
+          "default": "^[a-zA-Z][a-zA-Z0-9]*$",
+          "description": "Regular expression for validating variable names"
+        },
+        "goBestPractices.error.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable error handling rules"
+        },
+        "goBestPractices.error.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "default": "warning",
+          "description": "Set severity level for error handling issues"
+        },
+        "goBestPractices.formatting.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable formatting rules"
+        },
+        "goBestPractices.formatting.severity": {
+          "type": "string",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "default": "info",
+          "description": "Set severity level for formatting issues"
+        },
+        "goBestPractices.formatting.maxLineLength": {
+          "type": "number",
+          "default": 100,
+          "description": "Maximum line length before warning"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -32,10 +118,22 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
-    "@typescript-eslint/parser": "^8.25.0",
+  "@typescript-eslint/parser": "^8.25.0",
     "eslint": "^9.21.0",
     "typescript": "^5.7.3",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1"
-  }
+  },
+  "dependencies": {
+    "vscode": "^1.1.37"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PramithaMJ/gonexus"
+  },
+  "bugs": {
+    "url": "https://github.com/PramithaMJ/gonexus/issues"
+  },
+  "homepage": "https://github.com/PramithaMJ/gonexus#readme",
+  "license": "MIT"
 }

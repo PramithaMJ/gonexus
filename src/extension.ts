@@ -1,26 +1,72 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import { RuleEngine } from "./analyzer/ruleEngine";
+import { DiagnosticsProvider } from "./providers/diagnostics";
+import { QuickFixProvider } from "./providers/quickFix";
+import { CodeActionProvider } from "./providers/codeAction";
+import { loadConfiguration } from "./utils/config";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  console.log("Go Best Practices extension is now active");
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "gonexus" is now active!');
+  // Load configuration
+  const config = loadConfiguration();
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('gonexus.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from GoNexus!');
-	});
+  // Initialize the rule engine
+  const ruleEngine = new RuleEngine(config);
 
-	context.subscriptions.push(disposable);
+  // Register providers
+  const diagnosticsProvider = new DiagnosticsProvider(ruleEngine);
+  const quickFixProvider = new QuickFixProvider(ruleEngine);
+  const codeActionProvider = new CodeActionProvider(ruleEngine);
+
+  // Register event handlers
+  const diagnosticsCollection =
+    vscode.languages.createDiagnosticCollection("go-best-practices");
+  context.subscriptions.push(diagnosticsCollection);
+
+  // Listen for document changes
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      if (event.document.languageId === "go") {
+        diagnosticsProvider.updateDiagnostics(
+          event.document,
+          diagnosticsCollection
+        );
+      }
+    })
+  );
+
+  // Listen for document open
+  context.subscriptions.push(
+    vscode.workspace.onDidOpenTextDocument((document) => {
+      if (document.languageId === "go") {
+        diagnosticsProvider.updateDiagnostics(document, diagnosticsCollection);
+      }
+    })
+  );
+
+  // Register code action provider
+  context.subscriptions.push(
+    vscode.languages.registerCodeActionsProvider(
+      { language: "go", scheme: "file" },
+      codeActionProvider,
+      {
+        providedCodeActionKinds: [vscode.CodeActionKind.QuickFix],
+      }
+    )
+  );
+
+  // Register commands
+  context.subscriptions.push(
+    vscode.commands.registerCommand("go-best-practices.fixAll", () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor && editor.document.languageId === "go") {
+        quickFixProvider.fixAllProblems(editor.document);
+      }
+    })
+  );
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+  console.log("Go Best Practices extension is now deactivated");
+}
