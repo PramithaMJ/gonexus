@@ -2,11 +2,12 @@
   "name": "gonexus",
   "displayName": "GoNexus",
   "description": "Your Go coding companion for best practices",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.80.0"
   },
-  "publisher": "PramithaMJ",
+  "publisher": "Pramitha",
+  "icon": "resources/goNexus_imresizer.png",
   "categories": [
     "Linters",
     "Programming Languages",
