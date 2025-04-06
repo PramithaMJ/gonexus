@@ -58,20 +58,20 @@ export class IssueItem extends vscode.TreeItem {
         switch (issue.severity) {
             case 'error':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'error-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'error-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'error-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'error-dark.svg'))
                 };
                 break;
             case 'warning':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'warning-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'warning-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'warning-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'warning-dark.svg'))
                 };
                 break;
             case 'info':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'info-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'info-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'info-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'info-dark.svg'))
                 };
                 break;
         }
@@ -96,38 +96,38 @@ export class CategoryNode extends vscode.TreeItem {
         switch (subcategory) {
             case 'formatting':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'formatting-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'formatting-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'formatting-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'formatting-dark.svg'))
                 };
                 break;
             case 'errorHandling':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'error-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'error-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'error-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'error-dark.svg'))
                 };
                 break;
             case 'naming':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'naming-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'naming-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'naming-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'naming-dark.svg'))
                 };
                 break;
             case 'performance':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'performance-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'performance-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'performance-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'performance-dark.svg'))
                 };
                 break;
             case 'security':
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'security-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'security-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'security-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'security-dark.svg'))
                 };
                 break;
             default:
                 this.iconPath = {
-                    light: path.join(__dirname, '..', 'resources', 'category-light.svg'),
-                    dark: path.join(__dirname, '..', 'resources', 'category-dark.svg')
+                    light: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'category-light.svg')),
+                    dark: vscode.Uri.file(path.join(__dirname, '..', 'resources', 'category-dark.svg'))
                 };
                 break;
         }
@@ -168,7 +168,7 @@ export class IssuesProvider implements vscode.TreeDataProvider<TreeItem> {
 
     refresh(): void {
         console.log(`Refreshing ${this.category} issues view...`);
-        this._onDidChangeTreeData.fire();
+        this._onDidChangeTreeData.fire(null);
         
         // Analyze codebase after firing the event
         this.analyzeCodebase();
@@ -275,7 +275,7 @@ export class IssuesProvider implements vscode.TreeDataProvider<TreeItem> {
             vscode.window.showErrorMessage(`Error analyzing Go codebase: ${error}`);
         } finally {
             this.analyzing = false;
-            this._onDidChangeTreeData.fire();
+            this._onDidChangeTreeData.fire(null);
         }
     }
     
